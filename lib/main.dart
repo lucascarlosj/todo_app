@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app/app/database/connection.dart';
+import 'package:todo_app/app/database/database_adm_connection.dart';
 import 'package:todo_app/app/modules/home/home_controller.dart';
 import 'package:todo_app/app/modules/home/home_page.dart';
-import 'package:todo_app/app/modules/new_task/new_task.dart';
+import 'package:todo_app/app/modules/new_task/new_task_page.dart';
 import 'package:todo_app/app/modules/new_task/new_task_controller.dart';
 import 'package:todo_app/app/repositories/todos_repositorys.dart';
 
@@ -18,36 +18,19 @@ class App extends StatefulWidget {
   _AppState createState() => _AppState();
 }
 
-class _AppState extends State<App> with WidgetsBindingObserver {
-  @override
+class _AppState extends State<App> {
+  DatabaseAdmConnection databaseAdmConnection = DatabaseAdmConnection();
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addObserver(databaseAdmConnection);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(databaseAdmConnection);
     super.dispose();
-  }
-
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    var connection = Connection();
-    switch (state) {
-      case AppLifecycleState.resumed:
-        break;
-      case AppLifecycleState.inactive:
-        connection.closeConnection();
-        break;
-      case AppLifecycleState.paused:
-        connection.closeConnection();
-        break;
-      case AppLifecycleState.detached:
-        connection.closeConnection();
-        break;
-    }
-    super.didChangeAppLifecycleState(state);
   }
 
   Widget build(BuildContext context) {
@@ -62,7 +45,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
           textTheme: GoogleFonts.robotoTextTheme(),
         ),
         routes: {
-          '/new': (_) => ChangeNotifierProvider(
+          NewTaskPage.routerName: (_) => ChangeNotifierProvider(
                 create: (context) {
                   var newTaskController = NewTaskController(
                     repository: context.read<TodosRepository>(),
