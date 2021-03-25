@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/app/modules/new_task/new_task_controller.dart';
+import 'package:todo_app/app/shared/time_component.dart';
 
 class NewTaskPage extends StatelessWidget {
   static String routerName = '/new';
@@ -66,7 +67,10 @@ class NewTaskPage extends StatelessWidget {
                       style: TextStyle(
                           color: Colors.grey[800], fontWeight: FontWeight.bold),
                     ),
-                    Text('--------- COMPONENTE DE HORA ---------'),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TimeComponent(),
                     SizedBox(
                       height: 50,
                     ),
@@ -81,18 +85,16 @@ class NewTaskPage extends StatelessWidget {
                           ],
                           color: Theme.of(context).primaryColor,
                         ),
-                        child: Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              child: Center(
-                                child: Text(
-                                  'Salvar',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            child: Center(
+                              child: Text(
+                                'Salvar',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),

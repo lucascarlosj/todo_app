@@ -35,7 +35,11 @@ class _AppState extends State<App> {
 
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [Provider(create: (_) => TodosRepository())],
+      providers: [
+        Provider(
+          create: (_) => TodosRepository(),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Todo App',

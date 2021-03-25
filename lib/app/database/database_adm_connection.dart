@@ -3,7 +3,6 @@ import 'package:todo_app/app/database/connection.dart';
 
 class DatabaseAdmConnection with WidgetsBindingObserver{
 
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     var connection = Connection();
