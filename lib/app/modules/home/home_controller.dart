@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -49,7 +51,7 @@ class HomeController extends ChangeNotifier {
         findAllForWeek();
         break;
       case 2:
-        daySelected = await showDatePicker(
+        var day = await showDatePicker(
           context: context,
           initialDate: daySelected,
           firstDate: DateTime.now().subtract(
@@ -63,7 +65,11 @@ class HomeController extends ChangeNotifier {
             ),
           ),
         );
-        findTodosBySelectedDays();
+        if(day != null){
+          daySelected = day;
+          findTodosBySelectedDays();
+        }
+        
         break;
     }
     notifyListeners();
@@ -73,6 +79,12 @@ class HomeController extends ChangeNotifier {
     todo.finalizado = !todo.finalizado;
     this.notifyListeners();
     repository.checkOrUncheckTodo(todo);
+  }
+
+  void deleteTask(TodoModel todo) {
+    //todo.id = !todo.finalizado;
+    this.notifyListeners();
+    repository.deleteTask(todo);
   }
 
   void filterFinalized() {
@@ -87,7 +99,7 @@ class HomeController extends ChangeNotifier {
     var todos = await repository.findByPeriod(daySelected, daySelected);
 
     if (todos.isEmpty) {
-      listTodos = {dateFormart.format(DateTime.now()): []};
+      listTodos = {dateFormart.format(daySelected): []};
     } else {
       listTodos =
           groupBy(todos, (TodoModel todo) => dateFormart.format(todo.dataHora));
@@ -96,4 +108,11 @@ class HomeController extends ChangeNotifier {
 
   }
 
+  void update() {
+    if(selectedTab == 1){
+      this.findAllForWeek();
+    } else if(selectedTab == 2){
+      this.findTodosBySelectedDays();
+    }
+  }
 }

@@ -5,7 +5,12 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/app/modules/home/home_controller.dart';
 import 'package:todo_app/app/modules/new_task/new_task_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Consumer<HomeController>(
       builder: (BuildContext context, HomeController controller, _) {
@@ -61,7 +66,7 @@ class HomePage extends StatelessWidget {
                 var todos = listTodos[dayKey];
                 if (todos.isEmpty && controller.selectedTab == 0) {
                   return SizedBox.shrink();
-                } 
+                }
                 var today = DateTime.now();
                 if (dayKey == dateFormart.format(today)) {
                   day = 'HOJE';
@@ -70,68 +75,72 @@ class HomePage extends StatelessWidget {
                   day = 'AMANHÃ';
                 }
                 return Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(left: 20, right: 20, top: 20),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              day,
-                              style: TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () => Navigator.of(context)
-                                .pushNamed(NewTaskPage.routerName),
-                            icon: Icon(
-                              Icons.add_circle,
-                              color: Theme.of(context).primaryColor,
-                              size: 30,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: todos.length,
-                      itemBuilder: (_, index) {
-                        var todo = todos[index];
-                        return ListTile(
-                          leading: Checkbox(
-                            activeColor: Theme.of(context).primaryColor,
-                            value: todo.finalizado,
-                            onChanged: (bool value) =>
-                                controller.checkOrUncheck(todo),
-                          ),
-                          title: Text(
-                            todo.descricao,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, top: 20),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            day,
                             style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                decoration: todo.finalizado
-                                    ? TextDecoration.lineThrough
-                                    : null),
+                                fontSize: 30, fontWeight: FontWeight.bold),
                           ),
-                          trailing: Text(
-                            '${todo.dataHora.hour}:${todo.dataHora.minute}',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                decoration: todo.finalizado
-                                    ? TextDecoration.lineThrough
-                                    : null),
+                        ),
+                        IconButton(
+                          onPressed: () async {
+                            await Navigator.of(context).pushNamed(
+                                NewTaskPage.routerName,
+                                arguments: dayKey);
+                            controller.update();
+                          },
+                          icon: Icon(
+                            Icons.add_circle,
+                            color: Theme.of(context).primaryColor,
+                            size: 30,
                           ),
-                        );
-                      },
+                        ),
+                      ],
                     ),
-                  ],
-                );
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: todos.length,
+                    itemBuilder: (_, index) {
+                      var todo = todos[index];
+                      return ListTile(
+                        leading: Checkbox(
+                          activeColor: Theme.of(context).primaryColor,
+                          value: todo.finalizado,
+                          onChanged: (bool value) =>
+                              controller.checkOrUncheck(todo),
+                        ),
+                        title: Text(
+                          todo.descricao,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              decoration: todo.finalizado
+                                  ? TextDecoration.lineThrough
+                                  : null),
+                        ),
+                        trailing: Text(
+                          '${todo.dataHora.hour.toString().padLeft(2, '0')}:${todo.dataHora.minute.toString().padLeft(2, '0')}',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              decoration: todo.finalizado
+                                  ? TextDecoration.lineThrough
+                                  : null),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+                  );
               },
             ),
           ),
