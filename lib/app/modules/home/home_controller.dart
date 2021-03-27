@@ -1,5 +1,3 @@
-import 'dart:isolate';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -82,9 +80,9 @@ class HomeController extends ChangeNotifier {
   }
 
   void deleteTask(TodoModel todo) {
-    //todo.id = !todo.finalizado;
-    this.notifyListeners();
     repository.deleteTask(todo);
+    findAllForWeek();
+    this.notifyListeners(); 
   }
 
   void filterFinalized() {
